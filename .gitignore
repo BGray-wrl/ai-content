@@ -1,0 +1,16 @@
+*.json
+*.mp3
+*.mp4
+.env
+
+__pycache__/
+.venv/
+
+archive/
+keys/
+output_audio/
+output_video/
+output_vids/
+# sourced_content/
+stock_footage/
+
