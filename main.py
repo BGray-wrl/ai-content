@@ -1,3 +1,16 @@
+## Author: Benjamin Grayzel
+## Date: 1/26/2025
+## Description: This script generates a video from a Reddit story, uploads it to YouTube, and (hopefully) sends me SMS notification w/link.
+## TODO:
+##  - make reddit_stories fetch a single story and feed it into the function, not from sourced_content
+##  - make the _used files a json file or dict
+##  - set up online hosting to run this script daily/biweekly/whatever
+##  - add api to image gen for thumbnails
+##  - add api to text for better description
+##  - find better background vids
+##  - add background music?
+
+
 import json
 from dotenv import load_dotenv
 import os
@@ -8,14 +21,13 @@ from twilio.rest import Client
 import smtplib
 from email.mime.text import MIMEText
 
-
 from create_video import create_video
-# from reddit_stories import fetch_stories
 from stock_footage import download_stock_footage
 from text_to_speech import text_to_speech_by_sentence
 from upload_to_yt import upload_to_youtube
+# from reddit_stories import fetch_stories
 
-input_file = "ShortScaryStories.json"
+input_file = "ShortScaryStories.json" #current.json
 checkfile_path = "ShortScaryStories_used.txt"
 audio_dir = "output_audio"
 output_file = f"output_video/current.mp4"
