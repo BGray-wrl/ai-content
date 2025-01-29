@@ -16,6 +16,7 @@ from dotenv import load_dotenv
 import os
 import shutil
 import re
+from random import randint
 
 from twilio.rest import Client
 import smtplib
@@ -114,6 +115,7 @@ def main():
 
     text = ""
     title = ""
+    id = ""
     with open("sourced_content/"+input_file, "r") as f:
         text_temp = json.load(f)
 
@@ -122,20 +124,17 @@ def main():
         while story["id"] in checker:
             i += 1
             story = text_temp[i]
-        
-        with open("sourced_content/"+checkfile_path, "a") as f:
-            f.write(f"{story['id']},")
 
         text = story["text"]
         title = story["title"]
 
     if os.path.exists('output_audio'):
-        shutil.copy('output_audio', 'archive/output_audio')
+        shutil.copy('output_audio', 'archive/output_audio' + checker[-1]) #TODO fix this
         shutil.rmtree('output_audio', ignore_errors=True)
 
     # print(text)
     sentences = process_text(text)
-    text_to_speech_by_sentence(sentences, audio_dir, ELEVENLABS_API_KEY)
+    # text_to_speech_by_sentence(sentences, audio_dir, ELEVENLABS_API_KEY)
     # print(f"Generated (Really reused) audio for {title}")
 
     search_phrase = "horror "+title
@@ -158,6 +157,10 @@ def main():
 
     response = upload_to_youtube(current_video_file, title, description, tags, privacy_status="private")
     print(response)
+
+    with open("sourced_content/"+checkfile_path, "a") as f:
+        f.write(id+',')
+
     send_sms_via_email(phone_number=PHONE_NUMBER,message=response)
 
 if __name__ == "__main__":

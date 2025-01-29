@@ -20,6 +20,8 @@ def download_stock_footage(keyword, API_KEY, output_folder="stock_footage"):
         print(type(data))
         print()
         print(data)
+        with open("testest.json", "w") as f:
+            json.dump(data, f)
         print()
         for key in data.keys():
             print(key)
@@ -32,17 +34,19 @@ def download_stock_footage(keyword, API_KEY, output_folder="stock_footage"):
                 print("id",data['videos'][i]['id'])
                 print(data['videos'])
 
-                if data['videos'] and str(data['videos'][0]['id']) in checker and response.status_code == 200:
+                while data['videos'] and str(data['videos'][0]['id']) in checker and response.status_code == 200 and i < 10:
                     i += 1
                     params["page"]+=1
                     response = requests.get(BASE_URL, headers=headers, params=params)
                     data = response.json()
 
-                else:
-                    if response.status_code == 200:
-                        print("No more videos to use")
-                        return None
+                if str(data['videos'][0]['id']) in checker and response.status_code == 200:
+                    print("No more videos to use (Or out of first 10)")
+                    return None
+                elif response.status_code != 200:
                     print("Failed to fetch videos. Status Code: {response.status_code}")
+                    print("Full Response:")
+                    print("\n",response,'\n')
                     return None
                     
                 with open("stock_footage/footage_used.txt", "a") as f:
